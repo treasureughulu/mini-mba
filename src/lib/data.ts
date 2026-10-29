@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from './supabase';
 import type { Profile, Progress, Week } from './types';
+import { lessonFor } from '../curriculum';
 
 export function defaultProgress(user_id: string, week: number): Progress {
   return { user_id, week, status: 'Not started', hours_planned: 10, hours_actual: null, deliverable_done: false, score: null };
@@ -23,7 +24,10 @@ export function useSyllabus(uid: string) {
     setWeeks(
       ((base ?? []) as Week[]).map((w) => {
         const o = overrides.get(w.week);
-        return o ? { ...w, ...pick(o), customised: true } : w;
+        if (o) return { ...w, ...pick(o), customised: true };
+        // The detailed curriculum (src/curriculum) supersedes the summary stored in the database
+        const l = lessonFor(w.week);
+        return l ? { ...w, lectures: l.brief.watch, reading: l.brief.read, case_exercise: l.brief.do, deliverable: l.brief.deliverable } : w;
       }),
     );
     setLoading(false);

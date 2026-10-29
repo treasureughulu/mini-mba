@@ -7,6 +7,8 @@ import { TOTAL_WEEKS, weekRange } from '../lib/programme';
 import { STATUSES, type Notes, type Progress, type Status } from '../lib/types';
 import Deliverables from '../components/Deliverables';
 import CaseThread from '../components/CaseThread';
+import LessonView from '../components/LessonView';
+import { lessonFor } from '../curriculum';
 
 export default function WeekDetail() {
   const week = Number(useParams().week);
@@ -15,6 +17,7 @@ export default function WeekDetail() {
   const { get, save } = useProgress(uid);
   const members = useGroupMembers(profile.group_id);
   const w = weeks.find((x) => x.week === week);
+  const lesson = lessonFor(week);
 
   if (!w) return <p className="muted">Loading…</p>;
 
@@ -33,9 +36,11 @@ export default function WeekDetail() {
         </div>
       </div>
 
-      <div className="grid grid-2">
+      {lesson && !w.customised && <LessonView lesson={lesson} uid={uid} />}
+
+      <div className="grid grid-2" style={{ marginTop: 16 }}>
         <div className="card">
-          <h2>The plan</h2>
+          <h2>{lesson && !w.customised ? 'This week in brief' : 'The plan'}</h2>
           <p className="small">
             <strong>Watch:</strong> {w.lectures}
             <br />
