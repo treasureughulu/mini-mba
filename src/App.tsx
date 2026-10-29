@@ -1,6 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { useAuth } from './lib/auth';
-import { configured } from './lib/supabase';
+import { configured, supabase } from './lib/supabase';
 import Layout from './components/Layout';
 import Login from './pages/Login';
 import Onboarding from './pages/Onboarding';
@@ -15,7 +15,7 @@ import Group from './pages/Group';
 import Settings from './pages/Settings';
 
 export default function App() {
-  const { session, profile, loading } = useAuth();
+  const { session, profile, loading, error } = useAuth();
 
   if (!configured) {
     return (
@@ -26,6 +26,22 @@ export default function App() {
             Add <code>VITE_SUPABASE_URL</code> and <code>VITE_SUPABASE_ANON_KEY</code> to a <code>.env</code> file (see{' '}
             <code>.env.example</code> and the README), then restart.
           </p>
+        </div>
+      </div>
+    );
+  }
+  if (error) {
+    return (
+      <div className="center-screen">
+        <div className="card narrow">
+          <h1>Something's not connected</h1>
+          <p style={{ color: 'var(--behind)' }}>{error}</p>
+          <p className="muted small">
+            Check the two GitHub secrets match your Supabase Project URL and anon key exactly, and that both SQL files ran.
+          </p>
+          <button className="ghost" onClick={() => supabase.auth.signOut().then(() => location.reload())}>
+            Sign out and retry
+          </button>
         </div>
       </div>
     );
