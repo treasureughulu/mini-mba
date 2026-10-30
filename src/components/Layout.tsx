@@ -8,6 +8,7 @@ const links = [
   ['/calendar', 'Calendar'],
   ['/library', 'Library'],
   ['/flashcards', 'Flashcards'],
+  ['/extras', 'Co-curricular'],
   ['/electives', 'My electives'],
   ['/group', 'Study group'],
   ['/settings', 'Settings'],

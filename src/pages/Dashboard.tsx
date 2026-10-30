@@ -3,6 +3,8 @@ import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, X
 import { useMe } from '../lib/auth';
 import { useProgress, useSyllabus } from '../lib/data';
 import { TOTAL_WEEKS, clampWeek, currentWeek, statusClass, streak, weekRange } from '../lib/programme';
+import { monthOfWeek } from '../lib/extra';
+import { ACTIVITIES, BOOKS } from '../curriculum/cocurricular';
 
 export default function Dashboard() {
   const { uid, profile } = useMe();
@@ -82,6 +84,17 @@ export default function Dashboard() {
             </Link>
           </div>
         )}
+
+        <div className="card">
+          <p className="muted small">Co-curricular</p>
+          <h2 style={{ marginBottom: 6 }}>📖 {BOOKS.find((b) => b.month === monthOfWeek(cur))!.title}</h2>
+          <p className="small" style={{ marginTop: 0 }}>
+            <strong>Week {cur} challenge ({ACTIVITIES[cur - 1].type}):</strong> {ACTIVITIES[cur - 1].title}
+          </p>
+          <Link className="btn ghost" to="/extras">
+            Open co-curricular
+          </Link>
+        </div>
 
         <div className="card">
           <h2>By phase</h2>

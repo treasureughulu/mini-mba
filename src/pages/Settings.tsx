@@ -3,6 +3,42 @@ import { useMe } from '../lib/auth';
 import { supabase } from '../lib/supabase';
 import { fail } from '../lib/data';
 
+function PasswordCard() {
+  const [pw, setPw] = useState('');
+  const [pw2, setPw2] = useState('');
+  const [msg, setMsg] = useState('');
+
+  async function save() {
+    if (pw !== pw2) return setMsg("Passwords don't match.");
+    const { error } = await supabase.auth.updateUser({ password: pw });
+    if (fail(error)) return;
+    setPw('');
+    setPw2('');
+    setMsg('Password saved. Next time, sign in with your email and this password.');
+  }
+
+  return (
+    <div className="card narrow" style={{ maxWidth: 520 }}>
+      <h2>Password</h2>
+      <p className="muted small">Set a password so you can sign in without an email link. You stay signed in on each device until you sign out.</p>
+      <label>
+        New password (at least 8 characters)
+        <input type="password" autoComplete="new-password" value={pw} onChange={(e) => setPw(e.target.value)} />
+      </label>
+      <label>
+        Confirm password
+        <input type="password" autoComplete="new-password" value={pw2} onChange={(e) => setPw2(e.target.value)} />
+      </label>
+      <div className="row">
+        <button disabled={pw.length < 8} onClick={save}>
+          Save password
+        </button>
+        {msg && <span className="small">{msg}</span>}
+      </div>
+    </div>
+  );
+}
+
 export default function Settings() {
   const { uid, email, profile, refreshProfile } = useMe();
   const [name, setName] = useState(profile.display_name ?? '');
@@ -50,6 +86,7 @@ export default function Settings() {
           {saved && <span className="saved">Saved</span>}
         </div>
       </div>
+      <PasswordCard />
       <div className="card narrow" style={{ maxWidth: 520 }}>
         <h2>Account</h2>
         <div className="row">

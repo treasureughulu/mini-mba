@@ -130,6 +130,14 @@ select.status { width: auto; padding: 4px 8px; }
 .terms dt { font-weight: 600; }
 .terms dd { margin: 0; color: var(--muted); }
 ul, ol { padding-left: 20px; }
+.extra-row { padding: 12px 0; border-top: 1px solid var(--line); }
+.extra-row:first-of-type { border-top: none; }
+.extra-row.current { background: var(--accent-soft); margin: 0 -12px; padding: 12px; border-radius: 8px; }
+.pill.fiction { background: var(--behind-soft); color: var(--behind); }
+.kind.act-speak { background: var(--accent-soft); color: var(--accent); }
+.kind.act-write { background: var(--progress-soft); color: var(--progress); }
+.kind.act-brain { background: var(--done-soft); color: var(--done); }
+.kind.act-explore { background: var(--behind-soft); color: var(--behind); }
 
 @media (max-width: 760px) {
   .shell { flex-direction: column; }

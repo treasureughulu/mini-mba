@@ -13,6 +13,7 @@ import Flashcards from './pages/Flashcards';
 import Calendar from './pages/Calendar';
 import Group from './pages/Group';
 import Settings from './pages/Settings';
+import CoCurricular from './pages/CoCurricular';
 
 export default function App() {
   const { session, profile, loading, error } = useAuth();
@@ -61,6 +62,7 @@ export default function App() {
         <Route path="flashcards" element={<Flashcards />} />
         <Route path="calendar" element={<Calendar />} />
         <Route path="group" element={<Group />} />
+        <Route path="extras" element={<CoCurricular />} />
         <Route path="settings" element={<Settings />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
