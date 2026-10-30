@@ -108,6 +108,7 @@ export const BRAIN_GYM = [
   { name: 'Lichess puzzles', what: 'Calculation and patience', url: 'https://lichess.org/training' },
   { name: 'NYT Connections', what: 'Pattern-spotting', url: 'https://www.nytimes.com/games/connections' },
   { name: 'Wordle', what: 'Deduction', url: 'https://www.nytimes.com/games/wordle' },
-  { name: 'Duolingo', what: 'A little language daily', url: 'https://www.duolingo.com' },
+  { name: 'NYT Strands', what: 'Theme-spotting word search', url: 'https://www.nytimes.com/games/strands' },
+  { name: 'Minute Cryptic', what: 'One cryptic clue a day', url: 'https://www.minutecryptic.com' },
   { name: 'Your flashcards', what: 'Spaced repetition', url: '#/flashcards' },
 ];
