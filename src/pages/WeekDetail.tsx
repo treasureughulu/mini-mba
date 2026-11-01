@@ -17,7 +17,7 @@ export default function WeekDetail() {
   const { get, save } = useProgress(uid);
   const members = useGroupMembers(profile.group_id);
   const w = weeks.find((x) => x.week === week);
-  const lesson = lessonFor(week);
+  const lesson = lessonFor(week, profile.elective_tracks);
 
   if (!w) return <p className="muted">Loading…</p>;
 
@@ -36,26 +36,9 @@ export default function WeekDetail() {
         </div>
       </div>
 
-      {lesson && !w.customised && <LessonView lesson={lesson} uid={uid} />}
+      {lesson && <LessonView key={`${week}-${lesson.module}`} lesson={lesson} uid={uid} />}
 
-      <div className="grid grid-2" style={{ marginTop: 16 }}>
-        <div className="card">
-          <h2>{lesson && !w.customised ? 'This week in brief' : 'The plan'}</h2>
-          <p className="small">
-            <strong>Watch:</strong> {w.lectures}
-            <br />
-            <strong>Read:</strong> {w.reading}
-            <br />
-            <strong>Case / exercise:</strong> {w.case_exercise}
-            <br />
-            <strong>Deliverable:</strong> {w.deliverable}
-          </p>
-          {w.elective_slot && (
-            <Link to="/electives" className="small">
-              {w.customised ? 'Edit your elective' : 'Swap this for your own elective'}
-            </Link>
-          )}
-        </div>
+      <div style={{ marginTop: 16 }}>
         <ProgressPanel key={`${week}-${get(week).updated_at ? 'stored' : 'new'}`} p={get(week)} onSave={(patch) => save(week, patch)} />
       </div>
 

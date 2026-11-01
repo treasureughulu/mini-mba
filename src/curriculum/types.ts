@@ -15,6 +15,8 @@ export interface Session {
 
 export interface Lesson {
   week: number;
+  /** Week title; replaces the older module name stored in the database */
+  module: string;
   /** One-line summary used on the dashboard, weeks list and reminders */
   brief: { watch: string; read: string; do: string; deliverable: string };
   /** Why this week matters, in plain English */

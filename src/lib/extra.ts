@@ -39,4 +39,5 @@ export function useExtra(uid: string) {
   return { get, save };
 }
 
-export const monthOfWeek = (week: number) => Math.min(12, Math.max(1, Math.floor((week - 1) / 4) + 1));
+/** The programme has one book per 12-week block (1–4). */
+export const blockOfWeek = (week: number) => Math.min(4, Math.max(1, Math.floor((week - 1) / 12) + 1));

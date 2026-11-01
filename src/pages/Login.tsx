@@ -32,9 +32,9 @@ export default function Login() {
   return (
     <div className="center-screen">
       <div className="card narrow">
-        <h1>
-          Mini MBA <span style={{ color: 'var(--accent)' }}>Canvas</span>
-        </h1>
+        <div className="brand" style={{ padding: '0 0 12px', fontSize: 30 }}>
+          <span>mini</span> MBA
+        </div>
         <p className="muted">A 48-week programme modelled on the London Business School MBA.</p>
         {sent ? (
           <p>

@@ -9,6 +9,11 @@ export interface Profile {
   start_date: string;
   email_reminders: boolean;
   onboarded: boolean;
+  headline?: string;
+  bio?: string;
+  interests?: string[];
+  avatar_url?: string | null;
+  elective_tracks?: Record<string, string> | null;
 }
 
 export interface Group {

@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { fail } from '../lib/data';
+import { useExtra } from '../lib/extra';
 import { lessonMinutes } from '../curriculum';
 import type { Lesson, TaskKind } from '../curriculum/types';
 
@@ -11,33 +12,14 @@ function hours(min: number) {
   return `${Number.isInteger(h) ? h : h.toFixed(1)} h`;
 }
 
-/** Ticks are a per-device convenience, kept in this browser only. */
-function useTicks(key: string) {
-  const [ticks, setTicks] = useState<Set<string>>(new Set());
-  useEffect(() => {
-    try {
-      setTicks(new Set(JSON.parse(localStorage.getItem(key) ?? '[]')));
-    } catch {
-      setTicks(new Set());
-    }
-  }, [key]);
-  const toggle = (id: string) =>
-    setTicks((prev) => {
-      const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
-      try {
-        localStorage.setItem(key, JSON.stringify([...next]));
-      } catch {
-        /* storage unavailable */
-      }
-      return next;
-    });
-  return { ticks, toggle };
-}
-
 export default function LessonView({ lesson, uid }: { lesson: Lesson; uid: string }) {
-  const { ticks, toggle } = useTicks(`mmc:${uid}:w${lesson.week}`);
-  const total = lesson.sessions.reduce((n, s) => n + s.tasks.length, 0);
+  // Ticks are saved to your account, so they sync between phone and computer.
+  const extra = useExtra(uid);
+  const taskId = (si: number, ti: number) => `t${lesson.week}-${si}-${ti}`;
+  const ids = lesson.sessions.flatMap((s, si) => s.tasks.map((_, ti) => taskId(si, ti)));
+  const total = ids.length;
+  const ticks = new Set(ids.filter((id) => extra.get(id).status === 'Done'));
+  const toggle = (id: string) => extra.save(id, { status: ticks.has(id) ? 'To do' : 'Done' });
 
   return (
     <div className="stack">
@@ -65,7 +47,7 @@ export default function LessonView({ lesson, uid }: { lesson: Lesson; uid: strin
                 <span className="muted small">{hours(mins)}</span>
               </div>
               {s.tasks.map((t, ti) => {
-                const id = `${si}-${ti}`;
+                const id = taskId(si, ti);
                 return (
                   <label key={id} className={`task ${ticks.has(id) ? 'ticked' : ''}`}>
                     <input type="checkbox" checked={ticks.has(id)} onChange={() => toggle(id)} />

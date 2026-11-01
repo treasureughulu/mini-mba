@@ -6,6 +6,7 @@ import { nameOf, normalise, useGroupMembers } from '../lib/data';
 import { TOTAL_WEEKS, clampWeek, currentWeek, statusClass, streak } from '../lib/programme';
 import type { Deliverable, Group as GroupT, Progress } from '../lib/types';
 import GroupJoin from '../components/GroupJoin';
+import Avatar from '../components/Avatar';
 import Comments from '../components/Comments';
 import { openFile } from '../components/Deliverables';
 
@@ -73,9 +74,9 @@ export default function Group() {
         </p>
       </div>
 
-      <div className="card table-wrap">
+      <div className="card">
         <h2>Progress</h2>
-        <table>
+        <table className="member-table">
           <thead>
             <tr>
               <th>Member</th>
@@ -95,13 +96,31 @@ export default function Group() {
               return (
                 <tr key={m.id}>
                   <td>
-                    {m.display_name}
-                    {m.id === uid ? ' (you)' : ''}
+                    <div className="row" style={{ flexWrap: 'nowrap' }}>
+                      <Avatar person={m} size="sm" />
+                      <div>
+                        <strong>
+                          {m.display_name}
+                          {m.id === uid ? ' (you)' : ''}
+                        </strong>
+                        {m.headline && <div className="muted small">{m.headline}</div>}
+                        {m.bio && <div className="small">{m.bio}</div>}
+                        {(m.interests ?? []).length > 0 && (
+                          <div className="row" style={{ marginTop: 6, gap: 4 }}>
+                            {(m.interests ?? []).map((i) => (
+                              <span key={i} className="chip static" style={{ minHeight: 0, padding: '2px 8px', fontSize: 12 }}>
+                                {i}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </td>
-                  <td>{cur}</td>
-                  <td>{done.size}</td>
-                  <td>{streak(done, cur)} wk</td>
-                  <td>{mine.reduce((s, p) => s + (p.hours_actual ?? 0), 0).toFixed(0)}</td>
+                  <td data-label="Week">{cur}</td>
+                  <td data-label="Done">{done.size}</td>
+                  <td data-label="Streak">{streak(done, cur)} wk</td>
+                  <td className="hide-sm">{mine.reduce((s, p) => s + (p.hours_actual ?? 0), 0).toFixed(0)}</td>
                   <td>
                     <div className="dots">
                       {Array.from({ length: TOTAL_WEEKS }, (_, i) => {

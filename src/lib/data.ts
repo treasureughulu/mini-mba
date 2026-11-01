@@ -2,9 +2,10 @@ import { useCallback, useEffect, useState } from 'react';
 import { supabase } from './supabase';
 import type { Profile, Progress, Week } from './types';
 import { lessonFor } from '../curriculum';
+import { useAuth } from './auth';
 
 export function defaultProgress(user_id: string, week: number): Progress {
-  return { user_id, week, status: 'Not started', hours_planned: 10, hours_actual: null, deliverable_done: false, score: null };
+  return { user_id, week, status: 'Not started', hours_planned: 4, hours_actual: null, deliverable_done: false, score: null };
 }
 
 export function fail(error: { message: string } | null) {
@@ -12,38 +13,31 @@ export function fail(error: { message: string } | null) {
   return Boolean(error);
 }
 
-/** Shared syllabus merged with this user's own elective choices. */
-export function useSyllabus(uid: string) {
-  const [weeks, setWeeks] = useState<Week[]>([]);
+/** The 48 weeks for this person, using the elective tracks they chose. */
+export function useSyllabus(_uid: string) {
+  const { profile } = useAuth();
+  const tracks = profile?.elective_tracks;
+  const [base, setBase] = useState<Week[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const load = useCallback(async () => {
-    const { data: base } = await supabase.from('weeks').select('*').order('week');
-    const { data: mine } = await supabase.from('elective_choices').select('*').eq('user_id', uid);
-    const overrides = new Map((mine ?? []).map((o) => [o.week as number, o]));
-    setWeeks(
-      ((base ?? []) as Week[]).map((w) => {
-        const o = overrides.get(w.week);
-        if (o) return { ...w, ...pick(o), customised: true };
-        // The detailed curriculum (src/curriculum) supersedes the summary stored in the database
-        const l = lessonFor(w.week);
-        return l ? { ...w, lectures: l.brief.watch, reading: l.brief.read, case_exercise: l.brief.do, deliverable: l.brief.deliverable } : w;
-      }),
-    );
-    setLoading(false);
-  }, [uid]);
-
   useEffect(() => {
-    load();
-  }, [load]);
+    supabase
+      .from('weeks')
+      .select('*')
+      .order('week')
+      .then(({ data }) => {
+        setBase((data ?? []) as Week[]);
+        setLoading(false);
+      });
+  }, []);
 
-  return { weeks, loading, reload: load };
-}
+  // The curriculum in src/curriculum supersedes the summary stored in the database
+  const weeks = base.map((w) => {
+    const l = lessonFor(w.week, tracks);
+    return l ? { ...w, module: l.module, lectures: l.brief.watch, reading: l.brief.read, case_exercise: l.brief.do, deliverable: l.brief.deliverable } : w;
+  });
 
-function pick(o: Record<string, string>) {
-  const out: Partial<Week> = {};
-  for (const k of ['module', 'lectures', 'reading', 'case_exercise', 'deliverable'] as const) if (o[k]) out[k] = o[k];
-  return out;
+  return { weeks, loading };
 }
 
 export function useProgress(uid: string) {

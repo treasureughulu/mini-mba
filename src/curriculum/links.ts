@@ -50,6 +50,13 @@ export const L = {
   hbrFiveForces: 'https://hbr.org/2008/01/the-five-competitive-forces-that-shape-strategy',
   hbrWhatIsStrategy: 'https://hbr.org/1996/11/what-is-strategy',
   hbsCases: 'https://hbsp.harvard.edu',
+  hbrCases: 'https://store.hbr.org/case-studies/',
+  caseCola: 'https://store.hbr.org/product/cola-wars-continue-coke-and-pepsi-in-2010/711462',
+  caseZara: 'https://store.hbr.org/product/zara-fast-fashion/703497',
+  hbrJobs: 'https://hbr.org/2016/09/know-your-customers-jobs-to-be-done',
+  hbrPremortem: 'https://hbr.org/2007/09/performing-a-project-premortem',
+  bmc: 'https://www.strategyzer.com/library/the-business-model-canvas',
+  lbsMba: 'https://www.london.edu/masters-degrees/mba/programme-content',
 
   // Coursera Plus (paid subscription)
   cExcel: 'https://www.coursera.org/learn/excel-essentials',

@@ -14,6 +14,7 @@ import Calendar from './pages/Calendar';
 import Group from './pages/Group';
 import Settings from './pages/Settings';
 import CoCurricular from './pages/CoCurricular';
+import Profile from './pages/Profile';
 
 export default function App() {
   const { session, profile, loading, error } = useAuth();
@@ -63,6 +64,7 @@ export default function App() {
         <Route path="calendar" element={<Calendar />} />
         <Route path="group" element={<Group />} />
         <Route path="extras" element={<CoCurricular />} />
+        <Route path="profile" element={<Profile />} />
         <Route path="settings" element={<Settings />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
